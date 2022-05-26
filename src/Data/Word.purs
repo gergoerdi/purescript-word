@@ -15,6 +15,7 @@ import Data.String (take, drop)
 import Data.BigInt as BI
 import Data.Int as I
 import Data.Maybe (fromMaybe)
+import Type.Proxy (Proxy(..))
        
 import Data.Shift (class Shift)
 import Data.Num (class Num)
@@ -207,7 +208,7 @@ instance word32Num :: Num Word32 where
     negate = R.negate
     abs = O.abs
     signum = O.signum
-    fromBigInt bi = Word32 $ U.fromNumber <<< BI.toNumber $ bi
+    fromBigInt bi = Word32 $ U.fromNumber <<< BI.toNumber $ BI.and (BI.fromTLInt (Proxy :: Proxy 0xffffffff)) bi
 
 -- | Instance of `Real` for `Word32` for conversions between numbers.
 instance realWord32 :: Real Word32 where
@@ -291,6 +292,7 @@ instance word16Num :: Num Word16 where
     negate = R.negate
     abs = O.abs
     signum = O.signum
+    fromBigInt bi = Word16 $ U.and (U.fromInt 0xffff) <<< U.fromNumber <<< BI.toNumber $ bi
     fromBigInt bi = Word16 $ U.fromNumber <<< BI.toNumber $ bi
 
 -- | Instance of `Real` for `Word16` for conversions between numbers.
@@ -372,7 +374,7 @@ instance word8Num :: Num Word8 where
     negate = R.negate
     abs = O.abs
     signum = O.signum
-    fromBigInt bi = Word8 $ U.fromNumber <<< BI.toNumber $ bi
+    fromBigInt bi = Word8 $ U.and (U.fromInt 0xff) <<< U.fromNumber <<< BI.toNumber $ bi
 
 -- | Instance of `Real` for `Word8` for conversions between numbers.
 instance realWord8 :: Real Word8 where
